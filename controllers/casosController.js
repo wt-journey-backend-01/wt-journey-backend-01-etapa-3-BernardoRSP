@@ -87,7 +87,7 @@ async function atualizarCaso(req, res) {
     if (status && status !== "aberto" && status !== "solucionado") {
       erros.status = "O Status deve ser 'aberto' ou 'solucionado'";
     }
-    if (agente_id && !!intPos.test(agente_id)) {
+    if (agente_id && !intPos.test(agente_id)) {
       erros.agente_id = "O agente_id deve ter um padrão válido";
     } else if (agente_id && !(await agentesRepository.encontrar(agente_id))) {
       erros.agente_id = "O agente com o ID fornecido não foi encontrado";
@@ -126,7 +126,7 @@ async function atualizarCasoParcial(req, res) {
     if (status && status !== "aberto" && status !== "solucionado") {
       erros.status = "O Status deve ser 'aberto' ou 'solucionado'";
     }
-    if (agente_id && !!intPos.test(agente_id)) {
+    if (agente_id && !intPos.test(agente_id)) {
       erros.agente_id = "O agente_id deve ter um padrão válido";
     } else if (agente_id && !(await agentesRepository.encontrar(agente_id))) {
       erros.agente_id = "O agente com o ID fornecido não foi encontrado";
