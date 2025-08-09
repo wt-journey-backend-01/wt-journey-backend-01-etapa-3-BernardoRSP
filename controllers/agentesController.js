@@ -108,7 +108,7 @@ async function atualizarAgente(req, res) {
 }
 
 // Atualizar Informações Parciais do Agente
-async function atualizarAgente(req, res) {
+async function atualizarAgenteParcial(req, res) {
   try {
     const { id } = req.params;
     const { nome, dataDeIncorporacao, cargo, id: bodyId } = req.body;
@@ -170,5 +170,6 @@ module.exports = {
   encontrarAgente,
   adicionarAgente,
   atualizarAgente,
+  atualizarAgenteParcial,
   deletarAgente,
 };
