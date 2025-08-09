@@ -46,18 +46,14 @@ async function adicionarAgente(req, res) {
     if (dataDeIncorporacao && !dataDeIncorporacao.match(/^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/)) {
       erros.dataDeIncorporacao = "A data de incorporação deve ser uma data válida no formato AAAA-MM-DD";
     } else if (new Date(dataDeIncorporacao) > new Date()) {
-      erros.dataDeIncorporacao = "A data de incorporação não pode ter acontecido no futuro";
+      erros.dataDeIncorporacao = "A data de incorporação não pode ser uma data futura";
     }
 
     if (Object.keys(erros).length > 0) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
     }
 
-    const novoAgente = {
-      nome,
-      dataDeIncorporacao,
-      cargo,
-    };
+    const novoAgente = { nome, dataDeIncorporacao, cargo };
 
     const [agenteCriado] = await agentesRepository.adicionar(novoAgente);
     res.status(201).json(agenteCriado);
@@ -91,14 +87,53 @@ async function atualizarAgente(req, res) {
     if (dataDeIncorporacao && !dataDeIncorporacao.match(/^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/)) {
       erros.dataDeIncorporacao = "A data de incorporação deve ser uma data válida no formato AAAA-MM-DD";
     } else if (new Date(dataDeIncorporacao) > new Date()) {
-      erros.dataDeIncorporacao = "A data de incorporação não pode ser no futuro";
+      erros.dataDeIncorporacao = "A data de incorporação não pode ser uma data futura";
     }
 
     if (Object.keys(erros).length > 0) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
     }
 
-    const agenteAtualizado = await agentesRepository.atualizar({ id, nome, dataDeIncorporacao, cargo }, id);
+    const agenteAtualizado = await agentesRepository.atualizar({ nome, dataDeIncorporacao, cargo }, id);
+    if (!agenteAtualizado) {
+      return res.status(404).json({ status: 404, mensagem: "Agente não encontrado" });
+    }
+
+    res.status(200).json(agenteAtualizado);
+  } catch (error) {
+    console.log("Erro referente a: atualizarAgente\n");
+    console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
+  }
+}
+
+// Atualizar Informações Parciais do Agente
+async function atualizarAgente(req, res) {
+  try {
+    const { id } = req.params;
+    const { nome, dataDeIncorporacao, cargo, id: bodyId } = req.body;
+
+    if (!intPos.test(id)) {
+      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
+    }
+
+    const erros = {};
+
+    if (bodyId) {
+      erros.id = "Não é permitido alterar o ID de um agente.";
+    }
+
+    if (dataDeIncorporacao && !dataDeIncorporacao.match(/^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/)) {
+      erros.dataDeIncorporacao = "A data de incorporação deve ser uma data válida no formato AAAA-MM-DD";
+    } else if (new Date(dataDeIncorporacao) > new Date()) {
+      erros.dataDeIncorporacao = "A data de incorporação não pode ser uma data futura";
+    }
+
+    if (Object.keys(erros).length > 0) {
+      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
+    }
+
+    const agenteAtualizado = await agentesRepository.atualizar({ nome, dataDeIncorporacao, cargo }, id);
     if (!agenteAtualizado) {
       return res.status(404).json({ status: 404, mensagem: "Agente não encontrado" });
     }

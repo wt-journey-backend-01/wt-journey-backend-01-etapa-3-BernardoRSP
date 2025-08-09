@@ -112,7 +112,7 @@ router.put("/:id", casosController.atualizarCaso);
  *       404:
  *         description: Caso não encontrado
  */
-router.patch("/:id", casosController.atualizarCaso);
+router.patch("/:id", casosController.atualizarCasoParcial);
 
 /**
  * @swagger

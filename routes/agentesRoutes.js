@@ -116,7 +116,7 @@ router.put("/:id", agentesController.atualizarAgente);
  *         description: Agente não encontrado
  */
 
-router.patch("/:id", agentesController.atualizarAgente);
+router.patch("/:id", agentesController.atualizarAgenteParcial);
 
 /**
  * @swagger
