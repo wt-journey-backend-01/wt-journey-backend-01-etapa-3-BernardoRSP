@@ -9,6 +9,7 @@ async function listarAgentes(req, res) {
   } catch (error) {
     console.log("Erro referente a: listarAgentes\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -28,6 +29,7 @@ async function encontrarAgente(req, res) {
   } catch (error) {
     console.log("Erro referente a: encontrarAgente\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -62,6 +64,7 @@ async function adicionarAgente(req, res) {
   } catch (error) {
     console.log("Erro referente a: adicionarAgente\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -104,6 +107,7 @@ async function atualizarAgente(req, res) {
   } catch (error) {
     console.log("Erro referente a: atualizarAgente\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -122,6 +126,7 @@ async function deletarAgente(req, res) {
   } catch (error) {
     console.log("Erro referente a: deletarAgente\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 

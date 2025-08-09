@@ -10,6 +10,7 @@ async function listarCasos(req, res) {
   } catch (error) {
     console.log("Erro referente a: listarCasos\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -28,6 +29,7 @@ async function encontrarCaso(req, res) {
   } catch (error) {
     console.log("Erro referente a: encontrarCaso\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -43,8 +45,8 @@ async function adicionarCaso(req, res) {
     if (!titulo || !descricao || !status || !agente_id) {
       erros.geral = "Os campos 'titulo', 'descricao', 'status' e 'agente_id' são obrigatórios";
     }
-    if (status && status !== "aberto" && status !== "fechado") {
-      erros.status = "O Status deve ser 'aberto' ou 'fechado'";
+    if (status && status !== "aberto" && status !== "solucionado") {
+      erros.status = "O Status deve ser 'aberto' ou 'solucionado'";
     }
     if (agente_id && !intPos.test(agente_id)) {
       erros.agente_id = "O agente_id deve ter um padrão válido";
@@ -64,6 +66,7 @@ async function adicionarCaso(req, res) {
   } catch (error) {
     console.log("Erro referente a: adicionarCaso\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -91,6 +94,7 @@ async function atualizarCaso(req, res) {
   } catch (error) {
     console.log("Erro referente a: atualizarCaso\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 
@@ -109,6 +113,7 @@ async function deletarCaso(req, res) {
   } catch (error) {
     console.log("Erro referente a: deletarCaso\n");
     console.log(error);
+    res.status(500).json({ status: 500, mensagem: "Erro interno do servidor" });
   }
 }
 

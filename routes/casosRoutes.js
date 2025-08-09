@@ -79,7 +79,7 @@ router.post("/", casosController.adicionarCaso);
  *               titulo: Atualizado
  *               descricao: Atualização completa
  *               status: fechado
- *               agente_id: uuid-agente
+ *               agente_id: id-agente
  *     responses:
  *       200:
  *         description: Caso atualizado
