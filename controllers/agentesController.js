@@ -57,8 +57,8 @@ async function adicionarAgente(req, res) {
       cargo,
     };
 
-    await agentesRepository.adicionar(novoAgente);
-    res.status(201).json(novoAgente);
+    const [agenteCriado] = await agentesRepository.adicionar(novoAgente);
+    res.status(201).json(agenteCriado);
   } catch (error) {
     console.log("Erro referente a: adicionarAgente\n");
     console.log(error);

@@ -21,11 +21,11 @@ async function adicionar(caso) {
 // Atualizar Informações do Caso
 async function atualizar(dadosAtualizados, id) {
   const atualizado = await db("casos").where({ id: id }).update(dadosAtualizados, ["*"]);
-  return atualizado;
+  return atualizado[0];
 }
 
 // Deletar Caso
-async function deletar() {
+async function deletar(id) {
   const deletado = await db("casos").where({ id: id }).del();
   return deletado;
 }

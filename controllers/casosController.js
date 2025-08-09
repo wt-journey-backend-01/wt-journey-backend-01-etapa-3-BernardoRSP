@@ -46,8 +46,8 @@ async function adicionarCaso(req, res) {
     if (status && status !== "aberto" && status !== "fechado") {
       erros.status = "O Status deve ser 'aberto' ou 'fechado'";
     }
-    if (agente_id && !isUUID(agente_id)) {
-      erros.agente_id = "O agente_id deve ser um UUID válido";
+    if (agente_id && !intPos.test(agente_id)) {
+      erros.agente_id = "O agente_id deve ter um padrão válido";
     }
     if (Object.keys(erros).length > 0) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
@@ -59,53 +59,13 @@ async function adicionarCaso(req, res) {
       status,
       agente_id,
     };
-    await casosRepository.adicionar(novoCaso);
-    res.status(201).json(novoCaso);
+    const [casoCriado] = await casosRepository.adicionar(novoCaso);
+    res.status(201).json(casoCriado);
   } catch (error) {
     console.log("Erro referente a: adicionarCaso\n");
     console.log(error);
   }
 }
-
-// Atualizar Informações do Caso
-/*async function atualizarCaso(req, res) {
-    try{
-        const { id } = req.params;
-        const { titulo, descricao, status, agente_id, id: bodyId } = req.body;
-        if (!intPos.test(id)) {
-            return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
-        }
-
-        const casoAtualizado = await casosRepository.atualizar({ id, titulo, descricao, status, agente_id }, id);
-        if (!casoAtualizado) {
-            return res.status(404).json({ status: 404, mensagem: "Caso não encontrado" });
-        }
-        const erros = {};
-
-        if (bodyId) {
-            erros.id = "Não é permitido alterar o ID de um caso.";
-        }
-        if (!titulo || !descricao || !status || !agente_id) {
-            erros.geral = "Todos os campos são obrigatórios para atualização completa (PUT)";
-        }
-        if (status && status !== "aberto" && status !== "fechado") {
-            erros.status = "O Status deve ser 'aberto' ou 'fechado'";
-        }
-        if (agente_id && !isUUID(agente_id)) {
-            erros.agente_id = "O agente_id deve ser um UUID válido";
-        } else if (agente_id && !await agentesRepository.encontrar(agente_id)) {
-            erros.agente_id = "O agente com o ID fornecido não foi encontrado";
-        }
-        if (Object.keys(erros).length > 0) {
-            return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
-        }
-
-        res.status(200).json(casoAtualizado);
-    } catch (error) {
-        console.log("Erro referente a: atualizarCaso\n");
-        console.log(error);
-    }
-}*/
 
 // Atualizar Informações do Caso
 async function atualizarCaso(req, res) {
@@ -126,7 +86,7 @@ async function atualizarCaso(req, res) {
       return obj;
     }, {});
 
-    const casoAtualizado = await casosRepository.atualizar(dadosValidos, id);
+    const [casoAtualizado] = await casosRepository.atualizar(dadosValidos, id);
     res.json(casoAtualizado);
   } catch (error) {
     console.log("Erro referente a: atualizarCaso\n");
@@ -141,7 +101,7 @@ async function deletarCaso(req, res) {
     if (!intPos.test(id)) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID deve ter um padrão válido" } });
     }
-    const sucesso = await casosRepository.deleteById(id);
+    const sucesso = await casosRepository.deletar(id);
     if (!sucesso) {
       return res.status(404).json({ status: 404, mensagem: "Caso não encontrado" });
     }
