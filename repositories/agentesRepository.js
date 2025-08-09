@@ -20,7 +20,7 @@ async function adicionar(agente) {
 
 // Atualizar Informações do Agente
 async function atualizar(dadosAtualizados, id) {
-  const atualizado = await db("agentes").where({ id: id }).update(dadosAtualizados, ["*"]);
+  const atualizado = await db("agentes").where({ id: id }).update(dadosAtualizados).returning("*");
   return atualizado[0];
 }
 

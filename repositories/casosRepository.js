@@ -20,7 +20,7 @@ async function adicionar(caso) {
 
 // Atualizar Informações do Caso
 async function atualizar(dadosAtualizados, id) {
-  const atualizado = await db("casos").where({ id: id }).update(dadosAtualizados, ["*"]);
+  const atualizado = await db("casos").where({ id: id }).update(dadosAtualizados).returning("*");
   return atualizado[0];
 }
 

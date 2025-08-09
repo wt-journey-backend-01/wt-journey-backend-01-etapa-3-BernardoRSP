@@ -84,11 +84,11 @@ async function atualizarCaso(req, res) {
     if (!titulo || !descricao || !status || !agente_id) {
       erros.geral = "Todos os campos são obrigatórios para atualização completa (PUT)";
     }
-    if (status && status !== "aberto" && status !== "fechado") {
-      erros.status = "O Status deve ser 'aberto' ou 'fechado'";
+    if (status && status !== "aberto" && status !== "solucionado") {
+      erros.status = "O Status deve ser 'aberto' ou 'solucionado'";
     }
     if (agente_id && !!intPos.test(agente_id)) {
-      erros.agente_id = "O agente_id deve ser um UUID válido";
+      erros.agente_id = "O agente_id deve ter um padrão válido";
     } else if (agente_id && !(await agentesRepository.encontrar(agente_id))) {
       erros.agente_id = "O agente com o ID fornecido não foi encontrado";
     }
@@ -123,11 +123,11 @@ async function atualizarCasoParcial(req, res) {
     if (bodyId) {
       erros.id = "Não é permitido alterar o ID de um caso.";
     }
-    if (status && status !== "aberto" && status !== "fechado") {
-      erros.status = "O Status deve ser 'aberto' ou 'fechado'";
+    if (status && status !== "aberto" && status !== "solucionado") {
+      erros.status = "O Status deve ser 'aberto' ou 'solucionado'";
     }
     if (agente_id && !!intPos.test(agente_id)) {
-      erros.agente_id = "O agente_id deve ser um UUID válido";
+      erros.agente_id = "O agente_id deve ter um padrão válido";
     } else if (agente_id && !(await agentesRepository.encontrar(agente_id))) {
       erros.agente_id = "O agente com o ID fornecido não foi encontrado";
     }
@@ -135,7 +135,13 @@ async function atualizarCasoParcial(req, res) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
     }
 
-    const casoAtualizado = await casosRepository.atualizar({ titulo, descricao, status, agente_id }, id);
+    const dadosAtualizados = {};
+    if (titulo !== undefined) dadosAtualizados.titulo = titulo;
+    if (descricao !== undefined) dadosAtualizados.descricao = descricao;
+    if (status !== undefined) dadosAtualizados.status = status;
+    if (agente_id !== undefined) dadosAtualizados.agente_id = agente_id;
+
+    const casoAtualizado = await casosRepository.atualizar(dadosAtualizados, id);
     if (!casoAtualizado) {
       return res.status(404).json({ status: 404, mensagem: "Caso não encontrado" });
     }

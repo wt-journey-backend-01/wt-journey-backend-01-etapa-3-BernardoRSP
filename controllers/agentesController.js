@@ -132,8 +132,12 @@ async function atualizarAgenteParcial(req, res) {
     if (Object.keys(erros).length > 0) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: erros });
     }
+    const dadosAtualizados = {};
+    if (nome !== undefined) dadosAtualizados.nome = nome;
+    if (dataDeIncorporacao !== undefined) dadosAtualizados.dataDeIncorporacao = dataDeIncorporacao;
+    if (cargo !== undefined) dadosAtualizados.cargo = cargo;
 
-    const agenteAtualizado = await agentesRepository.atualizar({ nome, dataDeIncorporacao, cargo }, id);
+    const agenteAtualizado = await agentesRepository.atualizar(dadosAtualizados, id);
     if (!agenteAtualizado) {
       return res.status(404).json({ status: 404, mensagem: "Agente não encontrado" });
     }
