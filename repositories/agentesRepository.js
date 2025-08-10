@@ -8,7 +8,9 @@ async function listar() {
 
 // Mostrar Agente Referente ao ID
 async function encontrar(id) {
-  const encontrado = await db("agentes").where({ id: id }).first();
+  const encontrado = await db("agentes")
+    .where({ id: Number(id) })
+    .first();
   return encontrado;
 }
 
@@ -20,13 +22,18 @@ async function adicionar(agente) {
 
 // Atualizar Informações do Agente
 async function atualizar(dadosAtualizados, id) {
-  const atualizado = await db("agentes").where({ id: id }).update(dadosAtualizados).returning("*");
+  const atualizado = await db("agentes")
+    .where({ id: Number(id) })
+    .update(dadosAtualizados)
+    .returning("*");
   return atualizado[0];
 }
 
 // Deletar Agente
 async function deletar(id) {
-  const deletado = await db("agentes").where({ id: id }).del();
+  const deletado = await db("agentes")
+    .where({ id: Number(id) })
+    .del();
   return deletado;
 }
 

@@ -8,7 +8,9 @@ async function listar() {
 
 // Mostrar Caso Referente ao ID
 async function encontrar(id) {
-  const encontrado = await db("casos").where({ id: id }).first();
+  const encontrado = await db("casos")
+    .where({ id: Number(id) })
+    .first();
   return encontrado;
 }
 
@@ -20,13 +22,18 @@ async function adicionar(caso) {
 
 // Atualizar Informações do Caso
 async function atualizar(dadosAtualizados, id) {
-  const atualizado = await db("casos").where({ id: id }).update(dadosAtualizados).returning("*");
+  const atualizado = await db("casos")
+    .where({ id: Number(id) })
+    .update(dadosAtualizados)
+    .returning("*");
   return atualizado[0];
 }
 
 // Deletar Caso
 async function deletar(id) {
-  const deletado = await db("casos").where({ id: id }).del();
+  const deletado = await db("casos")
+    .where({ id: Number(id) })
+    .del();
   return deletado;
 }
 
