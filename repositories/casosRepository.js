@@ -16,7 +16,7 @@ async function encontrar(id) {
 
 // Adicionar Novo Caso
 async function adicionar(caso) {
-  const adicionado = await db("casos").insert(caso, ["*"]);
+  const adicionado = await db("casos").insert(caso).returning("*");
   return adicionado;
 }
 

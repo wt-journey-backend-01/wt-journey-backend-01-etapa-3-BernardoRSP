@@ -22,7 +22,7 @@ async function encontrarCaso(req, res) {
       return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID deve ter um padrão válido" } });
     }
     const caso = await casosRepository.encontrar(id);
-    if (!caso || Object.keys(caso).length === 0) {
+    if (!caso) {
       return res.status(404).json({ status: 404, mensagem: "Caso não encontrado" });
     }
     res.status(200).json(caso);
@@ -140,6 +140,10 @@ async function atualizarCasoParcial(req, res) {
     if (descricao !== undefined) dadosAtualizados.descricao = descricao;
     if (status !== undefined) dadosAtualizados.status = status;
     if (agente_id !== undefined) dadosAtualizados.agente_id = agente_id;
+
+    if (Object.keys(dadosAtualizados).length === 0) {
+      return res.status(400).json({ status: 400, mensagem: "Nenhum campo válido para atualização foi enviado." });
+    }
 
     const casoAtualizado = await casosRepository.atualizar(dadosAtualizados, id);
     if (!casoAtualizado) {

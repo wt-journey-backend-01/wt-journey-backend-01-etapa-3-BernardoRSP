@@ -16,7 +16,7 @@ async function encontrar(id) {
 
 // Adicionar Novo Agente
 async function adicionar(agente) {
-  const adicionado = await db("agentes").insert(agente, ["*"]);
+  const adicionado = await db("agentes").insert(agente).returning("*");
   return adicionado;
 }
 
