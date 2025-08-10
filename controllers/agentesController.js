@@ -18,7 +18,7 @@ async function encontrarAgente(req, res) {
   try {
     const { id } = req.params;
     if (!intPos.test(id)) {
-      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID deve ter um padrão válido" } });
+      return res.status(404).json({ status: 404, mensagem: "Parâmetros inválidos", errors: { id: "O ID deve ter um padrão válido" } });
     }
     const agente = await agentesRepository.encontrar(id);
     if (!agente) {
@@ -77,7 +77,7 @@ async function atualizarAgente(req, res) {
     const { nome, dataDeIncorporacao, cargo, id: bodyId } = req.body;
 
     if (!intPos.test(id)) {
-      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
+      return res.status(404).json({ status: 404, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
     }
 
     const erros = {};
@@ -124,7 +124,7 @@ async function atualizarAgenteParcial(req, res) {
     const { nome, dataDeIncorporacao, cargo, id: bodyId } = req.body;
 
     if (!intPos.test(id)) {
-      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
+      return res.status(404).json({ status: 404, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
     }
 
     const erros = {};
@@ -175,7 +175,7 @@ async function deletarAgente(req, res) {
   try {
     const { id } = req.params;
     if (!intPos.test(id)) {
-      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID deve ter um padrão válido" } });
+      return res.status(404).json({ status: 404, mensagem: "Parâmetros inválidos", errors: { id: "O ID deve ter um padrão válido" } });
     }
     const sucesso = await agentesRepository.deletar(id);
     if (!sucesso) {
