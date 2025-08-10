@@ -1,6 +1,6 @@
 const casosRepository = require("../repositories/casosRepository.js");
 const agentesRepository = require("../repositories/agentesRepository.js");
-const intPos = /^\d+$/;
+const intPos = /^\d+$/; // Regex para aceitar número inteiro positivos
 
 // Mostrar Todos os Casos
 async function listarCasos(req, res) {
@@ -39,6 +39,12 @@ async function adicionarCaso(req, res) {
     const { titulo, descricao, status, agente_id } = req.body;
 
     const erros = {};
+    const camposPermitidos = ["titulo", "descricao", "status", "agente_id"];
+    const campos = Object.keys(req.body);
+
+    if (campos.some((campo) => !camposPermitidos.includes(campo))) {
+      erros.geral = "O caso deve conter apenas os campos 'titulo', 'descricao', 'status' e 'agente_id'";
+    }
     if (!titulo || !descricao || !status || !agente_id) {
       erros.geral = "Os campos 'titulo', 'descricao', 'status' e 'agente_id' são obrigatórios";
     }
@@ -73,13 +79,18 @@ async function atualizarCaso(req, res) {
     const { id } = req.params;
     const { titulo, descricao, status, agente_id, id: bodyId } = req.body;
     if (!intPos.test(id)) {
-      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ter um padrão válido" } });
+      return res.status(400).json({ status: 400, mensagem: "Parâmetros inválidos", errors: { id: "O ID na URL deve ser um padrão válido" } });
     }
 
     const erros = {};
+    const camposPermitidos = ["titulo", "descricao", "status", "agente_id"];
+    const campos = Object.keys(req.body);
 
     if (bodyId) {
       erros.id = "Não é permitido alterar o ID de um caso.";
+    }
+    if (campos.some((campo) => !camposPermitidos.includes(campo))) {
+      erros.geral = "O caso deve conter apenas os campos 'titulo', 'descricao', 'status' e 'agente_id'";
     }
     if (!titulo || !descricao || !status || !agente_id) {
       erros.geral = "Todos os campos são obrigatórios para atualização completa (PUT)";
@@ -119,7 +130,12 @@ async function atualizarCasoParcial(req, res) {
     }
 
     const erros = {};
+    const camposPermitidos = ["titulo", "descricao", "status", "agente_id"];
+    const campos = Object.keys(req.body);
 
+    if (campos.some((campo) => !camposPermitidos.includes(campo))) {
+      erros.geral = "Campos inválidos enviados. Permitidos: 'titulo', 'descricao', 'status', 'agente_id'";
+    }
     if (bodyId) {
       erros.id = "Não é permitido alterar o ID de um caso.";
     }
