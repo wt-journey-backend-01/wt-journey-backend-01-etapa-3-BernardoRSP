@@ -1,4 +1,4 @@
-// aptura erros que ocorrem na aplicação.
+// Captura erros que ocorrem na aplicação.
 function errorHandler(err, req, res, next) {
   console.error(err.stack); // Loga o erro no console para debug
 
