@@ -3,7 +3,6 @@ const db = require("../db/db.js");
 // Mostrar Todos os Agentes
 async function listar() {
   const listado = await db("agentes");
-  listado.dataDeIncorporacao.toISOString().slice(0, 10) = await db("agentes").returning("dataDeIncorporacao");
   return listado;
 }
 
