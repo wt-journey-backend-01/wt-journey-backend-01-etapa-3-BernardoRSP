@@ -106,6 +106,7 @@ async function atualizarAgente(req, res) {
     }
 
     const agenteAtualizado = await agentesRepository.atualizar({ nome, dataDeIncorporacao, cargo }, id);
+    agenteAtualizado.dataDeIncorporacao = new Date(agenteAtualizado.dataDeIncorporacao).toISOString().split("T")[0];
     if (!agenteAtualizado) {
       return res.status(404).json({ status: 404, mensagem: "Agente não encontrado" });
     }
