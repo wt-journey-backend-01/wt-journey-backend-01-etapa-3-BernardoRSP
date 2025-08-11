@@ -4,6 +4,7 @@
   "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/mzlsx7b3)",
   "main": "server.js",
   "scripts": {
+    "db:reset": "npx knex migrate:rollback --all && npx knex migrate:latest && npx knex seed:run",
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
