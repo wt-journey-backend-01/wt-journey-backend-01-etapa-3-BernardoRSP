@@ -138,4 +138,6 @@ router.patch("/:id", agentesController.atualizarAgenteParcial);
  */
 router.delete("/:id", agentesController.deletarAgente);
 
+router.get("/:id/casos", agentesController.listarCasosDoAgente);
+
 module.exports = router;

@@ -1,5 +1,6 @@
 const agentesRepository = require("../repositories/agentesRepository.js");
 const intPos = /^\d+$/; // Regex para aceitar número inteiro positivo
+const formatoData = /^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/; // Regex para aceitar data no formato: YYYY-MM-DD
 
 // Mostrar Todos os Agentes
 async function listarAgentes(req, res) {
@@ -42,14 +43,14 @@ async function adicionarAgente(req, res) {
     const campos = Object.keys(req.body);
 
     if (campos.some((campo) => !camposPermitidos.includes(campo))) {
-      erros.geral = "O caso deve conter apenas os campos 'nome', 'dataDeIncorporacao' e 'cargo'";
+      erros.geral = "O agente deve conter apenas os campos 'nome', 'dataDeIncorporacao' e 'cargo'";
     }
 
     if (!nome || !dataDeIncorporacao || !cargo) {
       erros.geral = "Os campos 'nome', 'dataDeIncorporacao' e 'cargo' são obrigatórios";
     }
 
-    if (dataDeIncorporacao && !dataDeIncorporacao.match(/^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/)) {
+    if (dataDeIncorporacao && !dataDeIncorporacao.match(formatoData)) {
       erros.dataDeIncorporacao = "A data de incorporação deve ser uma data válida no formato AAAA-MM-DD";
     } else if (new Date(dataDeIncorporacao) > new Date()) {
       erros.dataDeIncorporacao = "A data de incorporação não pode ser uma data futura";
@@ -89,13 +90,13 @@ async function atualizarAgente(req, res) {
       erros.id = "Não é permitido alterar o ID de um agente.";
     }
     if (campos.some((campo) => !camposPermitidos.includes(campo))) {
-      erros.geral = "O caso deve conter apenas os campos 'nome', 'dataDeIncorporacao' e 'cargo'";
+      erros.geral = "O agente deve conter apenas os campos 'nome', 'dataDeIncorporacao' e 'cargo'";
     }
     if (!nome || !dataDeIncorporacao || !cargo) {
       erros.geral = "Todos os campos são obrigatórios para atualização completa (PUT)";
     }
 
-    if (dataDeIncorporacao && !dataDeIncorporacao.match(/^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/)) {
+    if (dataDeIncorporacao && !dataDeIncorporacao.match(formatoData)) {
       erros.dataDeIncorporacao = "A data de incorporação deve ser uma data válida no formato AAAA-MM-DD";
     } else if (new Date(dataDeIncorporacao) > new Date()) {
       erros.dataDeIncorporacao = "A data de incorporação não pode ser uma data futura";
@@ -146,7 +147,7 @@ async function atualizarAgenteParcial(req, res) {
       erros.id = "Não é permitido alterar o ID de um agente.";
     }
 
-    if (dataDeIncorporacao && !dataDeIncorporacao.match(/^\d{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/)) {
+    if (dataDeIncorporacao && !dataDeIncorporacao.match(formatoData)) {
       erros.dataDeIncorporacao = "A data de incorporação deve ser uma data válida no formato AAAA-MM-DD";
     } else if (new Date(dataDeIncorporacao) > new Date()) {
       erros.dataDeIncorporacao = "A data de incorporação não pode ser uma data futura";
@@ -196,6 +197,32 @@ async function deletarAgente(req, res) {
   }
 }
 
+// Listar todos os casos de um agente
+async function listarCasosDoAgente(req, res) {
+  try {
+    const { id } = req.params;
+
+    if (!intPos.test(id)) {
+      return res.status(400).json({
+        status: 400,
+        message: "Parâmetros inválidos",
+        error: { id: "O ID do agente deve ser um número inteiro positivo" },
+      });
+    }
+
+    const agente = await agentesRepository.encontrar(id);
+    if (!agente) {
+      return res.status(404).json({ status: 404, message: "Agente não encontrado" });
+    }
+
+    const casos = await casosRepository.listarCasos(id);
+    return res.status(200).json(casos);
+  } catch (error) {
+    console.log("Erro referente a: listarCasosDoAgente\n", error);
+    return res.status(500).json({ status: 500, message: "Erro interno do servidor" });
+  }
+}
+
 module.exports = {
   listarAgentes,
   encontrarAgente,
@@ -203,4 +230,5 @@ module.exports = {
   atualizarAgente,
   atualizarAgenteParcial,
   deletarAgente,
+  listarCasosDoAgente,
 };

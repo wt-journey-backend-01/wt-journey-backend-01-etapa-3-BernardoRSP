@@ -37,10 +37,17 @@ async function deletar(id) {
   return deletado;
 }
 
+// Mostrar Casos de Agente
+async function listarCasos(agente_id) {
+  const listado = await db("casos").where({ agente_id: Number(agente_id) });
+  return listado;
+}
+
 module.exports = {
   listar,
   encontrar,
   adicionar,
   atualizar,
   deletar,
+  listarCasos,
 };
